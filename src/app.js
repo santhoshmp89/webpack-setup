@@ -5,4 +5,4 @@ const TextField = () => <p>Test React App</p>;
 
 ReactDOM.render (<TextField />, document.getElementById ('root'));
 
-console.log ('hi');
+console.log ('hi', process.env.NODE_ENV);
