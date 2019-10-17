@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './app.scss';
 
 const TextField = () => <p>Test React App dev-server</p>;
 
