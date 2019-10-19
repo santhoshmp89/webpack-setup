@@ -1,11 +1,25 @@
 const path = require ('path');
-// const isProd = process.env.NODE_ENV === 'production'
-//   ? 'production'
-//   : 'development';
+const webpack = require ('webpack');
+const isProd = process.env.NODE_ENV === 'production'
+  ? 'production'
+  : 'development';
+
+function setUpAPI () {
+  switch (process.env.NODE_ENV) {
+    case 'production':
+      return 'https://production.com';
+
+    case 'development':
+      return 'https://developmentcom';
+
+    default:
+      return 'https://noAPI.com';
+  }
+}
 
 module.exports = env => {
   return {
-    mode: env.NODE_ENV,
+    mode: isProd,
     entry: './src/app.js',
     output: {
       path: path.resolve (__dirname, './public/dist'),
@@ -26,8 +40,17 @@ module.exports = env => {
         },
       ],
     },
+    plugins: [
+      new webpack.DefinePlugin ({
+        'process.env': {
+          NODE_ENV: JSON.stringify (process.env.NODE_ENV),
+          API_HOST: JSON.stringify (setUpAPI ()),
+        },
+      }),
+    ],
     devServer: {
       contentBase: path.join (__dirname, 'public'),
     },
   };
 };
+console.log (process.env.API_HOST);
