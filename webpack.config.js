@@ -1,10 +1,10 @@
-const path = require ('path');
-const webpack = require ('webpack');
-const isProd = process.env.NODE_ENV === 'production'
-  ? 'production'
-  : 'development';
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const isProd =
+  process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
-function setUpAPI () {
+function setUpAPI() {
   switch (process.env.NODE_ENV) {
     case 'production':
       return 'https://production.com';
@@ -22,8 +22,11 @@ module.exports = env => {
     mode: isProd,
     entry: './src/app.js',
     output: {
-      path: path.resolve (__dirname, './public/dist'),
+      path: path.resolve(__dirname, './public/dist'),
       filename: 'bundle.js',
+    },
+    node: {
+      fs: 'empty',
     },
     module: {
       rules: [
@@ -41,16 +44,19 @@ module.exports = env => {
       ],
     },
     plugins: [
-      new webpack.DefinePlugin ({
+      new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: JSON.stringify (process.env.NODE_ENV),
-          API_HOST: JSON.stringify (setUpAPI ()),
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+          API_HOST: JSON.stringify(setUpAPI()),
         },
+      }),
+      new HtmlWebpackPlugin({
+        inject: true,
+        template: './public/index.html',
       }),
     ],
     devServer: {
-      contentBase: path.join (__dirname, 'public'),
+      contentBase: path.join(__dirname, 'public'),
     },
   };
 };
-console.log (process.env.API_HOST);
